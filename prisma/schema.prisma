@@ -32,5 +32,5 @@ model Deliveries {
   deliveryman    DeliveryMan @relation(fields: [id_deliveryman], references: [id])
   id_deliveryman String
   created_at     DateTime
-  end_at         DateTime
+  end_at         DateTime?
 }
