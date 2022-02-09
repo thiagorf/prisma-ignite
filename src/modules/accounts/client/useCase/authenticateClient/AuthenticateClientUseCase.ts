@@ -10,17 +10,17 @@ export class AuthenticateClientUseCase {
 
 		const { username, password } = data;
 
-		const userExists = await prisma.client.findFirst({
+		const user = await prisma.client.findFirst({
 			where: {
 				username: username
 			}
 		});
 
-		if (!userExists) {
+		if (!user) {
 			throw new Error("User don't exists")
 		}
 
-		const passwordMatch = compare(password, userExists.password);
+		const passwordMatch = compare(password, user.password);
 
 		if (!passwordMatch) {
 			throw new Error("Username or password incorrect!");
@@ -28,7 +28,8 @@ export class AuthenticateClientUseCase {
 
 
 		const token = jwt.sign({ username }, "secret", {
-			expiresIn: "15m"
+			expiresIn: "15m",
+			subject: user.id
 		});
 
 		return {
